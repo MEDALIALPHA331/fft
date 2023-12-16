@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 function ProductsLoader({ fill = "fill-blue-600" }: { fill?: string }) {
   return (
     <svg
