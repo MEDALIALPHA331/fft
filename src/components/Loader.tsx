@@ -2,7 +2,7 @@ function ProductsLoader({ fill = "fill-blue-600" }: { fill?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className={`w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 ${fill}`}
+      className={`h-8 w-8 animate-spin text-gray-200 dark:text-gray-600 ${fill}`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

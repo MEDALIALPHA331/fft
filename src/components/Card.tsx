@@ -41,15 +41,15 @@ function Card() {
 
   if (!products) {
     return (
-      <div className="min-h-[500px] md:w-[550px] w-full grid place-content-center">
+      <div className="grid min-h-[500px] w-full place-content-center md:w-[550px]">
         <ProductsLoader />
       </div>
     );
   }
 
   return (
-    <div className="text-slate-600 rounded-md bg-white min-h-[500px] w-full md:w-[550px] md:px-8 border-2 py-4">
-      <header className="flex py-2 justify-center items-center w-full gap-4">
+    <div className="min-h-[500px] w-full rounded-md border-2 bg-white py-4 text-slate-600 md:w-[550px] md:px-8">
+      <header className="flex w-full items-center justify-center gap-4 py-2">
         {products.map((product) => (
           <button
             className="aspect-auto w-20"
@@ -61,9 +61,9 @@ function Card() {
         ))}
       </header>
 
-      <section className="container py-2 gap-4 px-5 md:px-0 w-full flex flex-col items-center justify-center ">
-        <div className="flex items-center justify-center flex-col gap-2 md:flex-row w-full">
-          <div className="md:w-2/3 w-full md:flex-1 flex flex-col">
+      <section className="container flex w-full flex-col items-center justify-center gap-4 px-5 py-2 md:px-0 ">
+        <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row">
+          <div className="flex w-full flex-col md:w-2/3 md:flex-1">
             <label
               className="text-sm text-slate-500"
               htmlFor={`${currentProduct?.name}-loan`}
@@ -71,16 +71,16 @@ function Card() {
               {currentProduct?.name} amount
             </label>
 
-            <div className="w-full flex rounded-md border-2 border-slate-200 pl-2">
+            <div className="flex w-full rounded-md border-2 border-slate-200 pl-2">
               <DollarIcon color="fill-slate-200" />
 
               <input
-                className=" focus:outline-none p-2 w-full"
+                className=" w-full p-2 focus:outline-none"
                 type="number"
                 value={loanAmount}
                 onChange={(e) =>
                   setLoanAmount((prev) =>
-                    prev >= 0 ? parseInt(e.target.value) : 0
+                    prev >= 0 ? parseInt(e.target.value) : 0,
                   )
                 }
                 name={`${currentProduct?.name}-loan`}
@@ -89,7 +89,7 @@ function Card() {
             </div>
           </div>
 
-          <div className="md:w-1/3 w-full flex flex-col">
+          <div className="flex w-full flex-col md:w-1/3">
             <label
               className="rounded-md text-sm text-slate-500"
               htmlFor={`${currentProduct?.name}-months`}
@@ -97,7 +97,7 @@ function Card() {
               Number of months
             </label>
 
-            <div className="w-full flex justify-between items-center border-2 border-slate-200 rounded-md px-1">
+            <div className="flex w-full items-center justify-between rounded-md border-2 border-slate-200 px-1">
               <button
                 onClick={() =>
                   setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
@@ -106,7 +106,7 @@ function Card() {
                 <ArrowLeft size={24} />
               </button>
               <input
-                className="p-2 focus:outline-none text-center w-full"
+                className="w-full p-2 text-center focus:outline-none"
                 type="number"
                 max={12}
                 min={1}
@@ -131,15 +131,15 @@ function Card() {
           </div>
         </div>
 
-        <div className="w-full min-h-[150px] my-2 flex flex-col items-center justify-center border-2 border-slate-200 rounded-md">
-          <div className="h-1/2 w-full flex items-center px-6 md:px-12 justify-between py-8">
-            <h1 className="text-slate-800 text-lg md:text-xl">
+        <div className="my-2 flex min-h-[150px] w-full flex-col items-center justify-center rounded-md border-2 border-slate-200">
+          <div className="flex h-1/2 w-full items-center justify-between px-6 py-8 md:px-12">
+            <h1 className="text-lg text-slate-800 md:text-xl">
               Monthly amount
             </h1>
-            <span className="text-accent text-2xl font-bold">${552}</span>
+            <span className="text-2xl font-bold text-accent">${552}</span>
           </div>
 
-          <div className="h-1/2 w-full text-center md:text-left font-normal text-xs bg-indigo-100 bg-opacity-30 px-8 py-6">
+          <div className="h-1/2 w-full bg-indigo-100 bg-opacity-30 px-8 py-6 text-center text-xs font-normal md:text-left">
             You’re planning {months}{" "}
             <strong className="font-bold">monthly deposits</strong> to reach
             your <span className="font-bold">${loanAmount}</span> goal by{" "}
@@ -149,8 +149,8 @@ function Card() {
         </div>
       </section>
 
-      <div className="w-full flex py-2">
-        <button className="mx-auto py-3 w-3/4 bg-blue-800 hover:text-blue-800 hover:bg-white border-2 border-transparent hover:border-2 hover:border-blue-800 rounded-3xl transition-all ease-in-out duration-500 text-white">
+      <div className="flex w-full py-2">
+        <button className="mx-auto w-3/4 rounded-3xl border-2 border-transparent bg-blue-800 py-3 text-white transition-all duration-500 ease-in-out hover:border-2 hover:border-blue-800 hover:bg-white hover:text-blue-800">
           Apply now
         </button>
       </div>
