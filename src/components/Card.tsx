@@ -5,6 +5,7 @@ import { Loan, Product } from "../types";
 import DollarIcon from "./icons/Dollar";
 import ArrowLeft from "./icons/ArrowLeft";
 import ArrowRight from "./icons/ArrowRight";
+import ProductsLoader from "./Loader";
 
 function filterArray(loan: Loan, products: Product[]): Product {
   switch (loan) {
@@ -30,7 +31,7 @@ function Card() {
   const [months, setMonths] = useState<number>(1);
 
   useEffect(() => {
-    console.log(products);
+    // console.log(products);
 
     if (products) {
       const data = filterArray(loan, products);
@@ -39,22 +40,24 @@ function Card() {
   }, [loan, products]);
 
   if (!products) {
-    return <h1>Loading PRODUCTS</h1>;
+    return (
+      <div className="min-h-[500px] md:w-[550px] w-full grid place-content-center">
+        <ProductsLoader />
+      </div>
+    );
   }
 
   return (
     <div className="text-slate-600 rounded-md bg-white min-h-[500px] w-full md:w-[550px] md:px-8 border-2 py-4">
       <header className="flex py-2 justify-center items-center w-full gap-4">
         {products.map((product) => (
-          <>
-            <button
-              className="aspect-auto w-20"
-              key={product.id}
-              onClick={() => setLoan(product.name)}
-            >
-              <img src={product.image} alt={`${product.name} Logo`} />
-            </button>
-          </>
+          <button
+            className="aspect-auto w-20"
+            key={product.id}
+            onClick={() => setLoan(product.name)}
+          >
+            <img src={product.image} alt={`${product.name} Logo`} />
+          </button>
         ))}
       </header>
 
@@ -63,7 +66,7 @@ function Card() {
           <div className="md:w-2/3 w-full md:flex-1 flex flex-col">
             <label
               className="text-sm text-slate-500"
-              htmlFor={`${currentProduct?.name}`}
+              htmlFor={`${currentProduct?.name}-loan`}
             >
               {currentProduct?.name} amount
             </label>
@@ -89,7 +92,7 @@ function Card() {
           <div className="md:w-1/3 w-full flex flex-col">
             <label
               className="rounded-md text-sm text-slate-500"
-              htmlFor={`${currentProduct?.name}`}
+              htmlFor={`${currentProduct?.name}-months`}
             >
               Number of months
             </label>
@@ -108,14 +111,11 @@ function Card() {
                 max={12}
                 min={1}
                 value={months}
-                //TODO: fix this plz
-                // onKeyUp={() =>
-                //   setMonths((prev) => (prev < 12 ?( prev += 1) : 12))
+                // onKeyDown={() =>
+                //   setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
                 // }
-                onKeyDown={() =>
-                  setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
-                }
-                // onChange={(e) => setMonths(parseInt(e.target.value))}
+                readOnly
+                onChange={(e) => setMonths(Number(e.target.value))}
                 name={`${currentProduct?.name}-months`}
                 id={`${currentProduct?.name}-months`}
               />
