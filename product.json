@@ -1,0 +1,12 @@
+[
+  {
+    "id": "124538",
+    "interest": 4,
+    "name": "Plastic Table",
+    "min_amount": 10,
+    "max_amount": 120,
+    "min_tenure": 3,
+    "max_tenure": 6,
+    "image": ""
+  }
+]
