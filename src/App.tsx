@@ -1,17 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import "./App.css";
 import Card from "./components/Card";
+import { Product } from "./types";
 
-export interface Product {
-  id: string;
-  interest: number;
-  name: string;
-  min_amount: number;
-  max_amount: number;
-  min_tenure: number;
-  max_tenure: number;
-  image: string;
-}
+
 
 //TODO: on prod use cloudinary or similar service to optimize the assets
 
@@ -41,8 +33,12 @@ function App() {
 
   return (
     <ProductsContext.Provider value={products}>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Card />
+      <main className="min-h-screen max-w-full flex-col flex justify-center items-center">
+        <h1 className="text-accent">
+          Let's plan your <span className="font-bold">loan</span>
+        </h1>
+        <Card  />
+      </main>
     </ProductsContext.Provider>
   );
 }
