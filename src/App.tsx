@@ -2,15 +2,27 @@ import { createContext, useEffect, useState } from "react";
 import "./App.css";
 import Card from "./components/Card";
 import { Product } from "./types";
+import { PRODS } from "./products";
 
-//TODO: on prod use cloudinary or similar service to optimize the assets
+/**
+ * for validation:
+ * @link https://github.com/colinhacks/zod
+ * for Unstyled components:
+ * @link https://www.radix-ui.com/
+ * TODO: on prod use cloudinary or similar service to optimize the assets
+ */
 
 async function fetchProduct() {
+  //? JUST TO TEST DEPLOYMENT WITHOUT CHANGING ALOT
+  if (import.meta.env.NODE_ENV === "production") {
+    return PRODS;
+  }
+
   const res = await fetch("./product.json", {});
 
-  if (!res.ok) {
-    //TODO: handle the err, maybe return an error page
-  }
+  // if (!res.ok) {
+  //   throw new Error("Could not fetch products");
+  // }
 
   const data = await res.json();
   return data as Product[];
@@ -22,6 +34,7 @@ function App() {
   const [products, setProducts] = useState<Product[] | undefined>();
 
   useEffect(() => {
+    //TODO: handle error with try catch
     fetchProduct()
       .then((products) => {
         setProducts(products);
@@ -42,6 +55,3 @@ function App() {
 }
 
 export default App;
-
-//? Validation library: https://github.com/colinhacks/zod
-//? Unstyled components: https://www.radix-ui.com/

@@ -1,10 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ProductsContext } from "../App";
 
-// import house from "../assets/house.png";
-// import dollar from "../assets/dollar.png";
-// import travel from "../assets/travel.png";
-
 import { Loan, Product } from "../types";
 import DollarIcon from "./icons/Dollar";
 import ArrowLeft from "./icons/ArrowLeft";
@@ -158,9 +154,6 @@ function Card() {
           Apply now
         </button>
       </div>
-
-      {/* <DollarIcon /> */}
-      {/* {JSON.stringify(currentProduct?.name)} */}
     </div>
   );
 }
