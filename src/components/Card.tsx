@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useId, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductsContext } from "../App";
 
 // import house from "../assets/house.png";
