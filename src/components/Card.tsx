@@ -5,19 +5,18 @@ import { ProductsContext } from "../App";
 // import dollar from "../assets/dollar.png";
 // import travel from "../assets/travel.png";
 
-import { Product } from "../types";
-
-type Loan = "House" | "Automobile" | "Cash";
+import { Loan, Product } from "../types";
+import DollarIcon from "./icons/Dollar";
 
 function filterArray(loan: Loan, products: Product[]): Product {
   switch (loan) {
-    case "Automobile": {
+    case "Automobile Loan": {
       return products.filter((p) => p.name == "Automobile Loan")[0];
     }
-    case "Cash": {
+    case "Cash Loan": {
       return products.filter((p) => p.name == "Cash Loan")[0];
     }
-    case "House": {
+    case "Housing Loan": {
       return products.filter((p) => p.name == "Housing Loan")[0];
     }
   }
@@ -26,7 +25,7 @@ function filterArray(loan: Loan, products: Product[]): Product {
 function Card() {
   const products = useContext(ProductsContext);
 
-  const [loan, setLoan] = useState<Loan>("Automobile");
+  const [loan, setLoan] = useState<Loan>("Housing Loan");
   const [currentProduct, setCurrentProduct] = useState<Product | undefined>();
 
   useEffect(() => {
@@ -39,35 +38,31 @@ function Card() {
   }, [loan, products]);
 
   if (!products) {
-    return <div>TODO: empty sate</div>;
+    return <h1>THERE IS NO PRODUCTS</h1>;
   }
 
   return (
-    <div className="text-accent w-2/3 border-2 border-accent">
-      <header className="flex justify-center items-center w-full px-4">
-        {/* <button onClick={() => setLoan("Automobile")}>
-          <img src={travel} alt="car logo" />
-        </button>
-
-        <button onClick={() => setLoan("House")}>
-          <img src={house} alt="" />
-        </button>
-
-        <button onClick={() => setLoan("Cash")}>
-          <img src={dollar} alt="" />
-        </button> */}
-
+    <div className="text-accent rounded-md bg-white min-h-[500px] w-full md:w-auto md:px-8 border-2 py-4">
+      <header className="flex justify-center items-center w-full gap-4">
         {products.map((product) => (
           <button
             className="aspect-auto w-20"
             key={product.id}
-            onClick={() => setLoan("Cash")}
+            onClick={() => setLoan(product.name)}
           >
             <img src={product.image} alt={`${product.name} Logo`} />
           </button>
         ))}
       </header>
 
+      <div className="flex items-center justify-center flex-col gap-2 md:flex-row py-2 px-8 md:px-0 w-full">
+        <div className="rounded-sm md:w-2/3 w-full md:flex-1 bg-slate-200">
+          H
+        </div>
+        <div className="rounded-sm md:w-1/3 w-full bg-slate-200">B</div>
+      </div>
+
+      <DollarIcon />
       {JSON.stringify(currentProduct?.name)}
     </div>
   );
