@@ -9,6 +9,9 @@ export default {
         //TODO: extract all important ones here
         accent: "#6366f1", //indigo-500
       },
+      fontFamily: {
+        primary: ["Inter", "sans-serif"],
+      },
     },
   },
   plugins: [],

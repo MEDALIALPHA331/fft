@@ -31,7 +31,7 @@ function App() {
 
   return (
     <ProductsContext.Provider value={products}>
-      <main className="min-h-screen bg-indigo-100 bg-opacity-20 max-w-full flex-col flex gap-2 justify-center items-center p-4 md:p-6">
+      <main className="min-h-screen font-primary bg-indigo-100 bg-opacity-20 max-w-full flex-col flex gap-2 justify-center items-center p-4 md:p-6">
         <h1 className="text-accent">
           Let's plan your <span className="font-bold">loan</span>
         </h1>
@@ -42,3 +42,6 @@ function App() {
 }
 
 export default App;
+
+//? Validation library: https://github.com/colinhacks/zod
+//? Unstyled components: https://www.radix-ui.com/

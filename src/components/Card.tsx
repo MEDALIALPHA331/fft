@@ -30,7 +30,7 @@ function Card() {
   const [loan, setLoan] = useState<Loan>("Housing Loan");
   const [currentProduct, setCurrentProduct] = useState<Product | undefined>();
 
-  const [loanAmount, setLoanAmount] = useState<number>();
+  const [loanAmount, setLoanAmount] = useState<number>(0);
   const [months, setMonths] = useState<number>(1);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function Card() {
 
   return (
     <div className="text-slate-600 rounded-md bg-white min-h-[500px] w-full md:w-[550px] md:px-8 border-2 py-4">
-      <header className="flex justify-center items-center w-full gap-4">
+      <header className="flex py-2 justify-center items-center w-full gap-4">
         {products.map((product) => (
           <>
             <button
@@ -62,7 +62,7 @@ function Card() {
         ))}
       </header>
 
-      <section className="container py-4 gap-4 px-8 md:px-0 w-full flex flex-col items-center justify-center">
+      <section className="container py-2 gap-4 px-5 md:px-0 w-full flex flex-col items-center justify-center ">
         <div className="flex items-center justify-center flex-col gap-2 md:flex-row w-full">
           <div className="md:w-2/3 w-full md:flex-1 flex flex-col">
             <label
@@ -79,7 +79,11 @@ function Card() {
                 className=" focus:outline-none p-2 w-full"
                 type="number"
                 value={loanAmount}
-                onChange={(e) => setLoanAmount(parseInt(e.target.value))}
+                onChange={(e) =>
+                  setLoanAmount((prev) =>
+                    prev >= 0 ? parseInt(e.target.value) : 0
+                  )
+                }
                 name={`${currentProduct?.name}-loan`}
                 id={`${currentProduct?.name}-loan`}
               />
@@ -108,6 +112,13 @@ function Card() {
                 max={12}
                 min={1}
                 value={months}
+                //TODO: fix this plz
+                // onKeyUp={() =>
+                //   setMonths((prev) => (prev < 12 ?( prev += 1) : 12))
+                // }
+                onKeyDown={() =>
+                  setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
+                }
                 // onChange={(e) => setMonths(parseInt(e.target.value))}
                 name={`${currentProduct?.name}-months`}
                 id={`${currentProduct?.name}-months`}
@@ -124,17 +135,34 @@ function Card() {
           </div>
         </div>
 
-        <div className="w-full"></div>
+        <div className="w-full min-h-[150px] my-2 flex flex-col items-center justify-center border-2 border-slate-200 rounded-md">
+          <div className="h-1/2 w-full flex items-center px-6 md:px-12 justify-between py-8">
+            <h1 className="text-slate-800 text-lg md:text-xl">
+              Monthly amount
+            </h1>
+            <span className="text-accent text-2xl font-bold">${552}</span>
+          </div>
+
+          <div className="h-1/2 w-full text-center md:text-left font-normal text-xs bg-indigo-100 bg-opacity-30 px-8 py-6">
+            You’re planning {months}{" "}
+            <strong className="font-bold">monthly deposits</strong> to reach
+            your <span className="font-bold">${loanAmount}</span> goal by{" "}
+            <span className="font-bold">July 2023</span>. The total amount
+            loaned will be <span className="font-bold">${`26, 300`}</span>
+          </div>
+        </div>
       </section>
 
+      <div className="w-full flex py-2">
+        <button className="mx-auto py-3 w-3/4 bg-blue-800 hover:text-blue-800 hover:bg-white border-2 border-transparent hover:border-2 hover:border-blue-800 rounded-3xl transition-all ease-in-out duration-500 text-white">
+          Apply now
+        </button>
+      </div>
+
       {/* <DollarIcon /> */}
-      {JSON.stringify(currentProduct?.name)}
+      {/* {JSON.stringify(currentProduct?.name)} */}
     </div>
   );
 }
 
 export default Card;
-
-function LoanForm({ product }: { product: Product }) {
-  <form action="">{product.name}</form>;
-}
