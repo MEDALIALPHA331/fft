@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductsContext } from "../App";
 
 import { Loan, Product } from "../types";
@@ -32,6 +32,14 @@ function calculateMonthlyInstallment(
   return totalAmount / nbMonths;
 }
 
+function calculateAndFormatDate() {
+  // const today = new Date();
+
+  //TODO
+
+  return "21/02/2025";
+}
+
 function Card() {
   const products = useContext(ProductsContext);
 
@@ -52,6 +60,7 @@ function Card() {
   }, [loanAmount, currentProduct, products]);
 
   useEffect(() => {
+    calculateAndFormatDate();
     if (products) {
       const data = filterArray(loan, products);
       setCurrentProduct(data);
@@ -99,48 +108,48 @@ function Card() {
               {currentProduct?.name} amount
             </label>
 
-            <div className="flex w-full rounded-md border-2 border-slate-200 pl-2">
+            <div
+              className={`flex w-full rounded-md border-2 ${
+                loanAmount < parseFloat(currentProduct.min_amount)
+                  ? "border-red-400"
+                  : "border-slate-200"
+              } pl-2`}
+            >
               <DollarIcon color="fill-slate-200" />
 
               <input
-                className=" w-full p-2 focus:outline-none"
+                className=" w-full rounded-md p-2 focus:outline-none"
                 type="number"
-                min={parseInt(currentProduct.min_amount)}
-                max={parseInt(currentProduct.max_amount)}
+                min={parseFloat(currentProduct.min_amount)}
+                max={parseFloat(currentProduct.max_amount)}
                 value={loanAmount}
                 onChange={(e) => {
-                  //! Validation should be either onSubmit using something like zod or yup or by displaying ann error message under the input
+                  /* 
+                  Validation should be either onSubmit using something
+                    like zod or yup or by displaying ann error message under the input
+                  */
+
                   const newLoanAmount = parseFloat(e.target.value);
+
                   const max = parseFloat(currentProduct.max_amount);
                   const min = parseFloat(currentProduct.min_amount);
 
-                  // if (newLoanAmount >= max) {
-                  //   setLoanAmount(max);
-                  //   return;
-                  // }
+                  setLoanAmount(() => {
+                    if (isNaN(newLoanAmount)) {
+                      return min;
+                    }
 
-                  // if (newLoanAmount <= min) {
-                  //   setLoanAmount(min);
-                  //   return;
-                  // }
+                    if (newLoanAmount > max) {
+                      return min;
+                    }
 
-                  if (!isNaN(newLoanAmount)) {
-                    setLoanAmount(parseFloat(e.target.value));
-                  }
+                    return newLoanAmount;
+                  });
                 }}
                 name={`${currentProduct?.name}-loan`}
                 id={`${currentProduct?.name}-loan`}
               />
             </div>
-            {/* <p
-              className={`text-sm font-light text-red-400 ${
-                loanAmount > parseFloat(currentProduct.max_amount)
-                  ? "block"
-                  : "hidden"
-              }`}
-            >
-              you are too high
-            </p> */}
           </div>
 
           <div className="flex w-full flex-col md:w-1/3">
@@ -155,7 +164,7 @@ function Card() {
               <button
                 onClick={() =>
                   setMonths((prev) =>
-                    prev >= parseInt(currentProduct.min_tenure)
+                    prev > parseInt(currentProduct.min_tenure)
                       ? (prev -= 1)
                       : parseInt(currentProduct.min_tenure),
                   )
