@@ -7,37 +7,13 @@ import ArrowLeft from "./icons/ArrowLeft";
 import ArrowRight from "./icons/ArrowRight";
 import ProductsLoader from "./Loader";
 
-function filterArray(loan: Loan, products: Product[]): Product {
-  switch (loan) {
-    case "Automobile Loan": {
-      return products.filter((p) => p.name == "Automobile Loan")[0];
-    }
-    case "Cash Loan": {
-      return products.filter((p) => p.name == "Cash Loan")[0];
-    }
-    case "Housing Loan": {
-      return products.filter((p) => p.name == "Housing Loan")[0];
-    }
-  }
-}
-
-function calculateTotalAmount(loanAmount: number, interest: number): number {
-  return loanAmount + loanAmount * interest;
-}
-
-function calculateMonthlyInstallment(
-  totalAmount: number,
-  nbMonths: number,
-): number {
-  return totalAmount / nbMonths;
-}
-
-function calculateAndFormatDate(months: number) {
-  const today = new Date();
-
-  //find the date that corresponds with the day after the months from today
-  // format that date in this format and return it: e.g "July 2023"
-}
+import {
+  calculateAndFormatDate,
+  calculateMonthlyInstallment,
+  calculateTotalAmount,
+  filterArray,
+  formatCurrency,
+} from "../utils";
 
 function Card() {
   const products = useContext(ProductsContext);
@@ -59,8 +35,6 @@ function Card() {
   }, [loanAmount, currentProduct, products]);
 
   useEffect(() => {
-    // calculateAndFormatDate(21);
-
     if (products) {
       const data = filterArray(loan, products);
       setCurrentProduct(data);
@@ -213,21 +187,29 @@ function Card() {
               Monthly amount
             </h1>
             <span className="text-2xl font-bold text-accent">
-              ${calculateMonthlyInstallment(totalAmount, months).toPrecision(5)}
+              $
+              {
+                formatCurrency(calculateMonthlyInstallment(totalAmount, months))
+                //other option: calculateMonthlyInstallment(totalAmount, months).toPrecision(5)
+              }
             </span>
           </div>
 
           <div className="h-1/2 w-full bg-indigo-100 bg-opacity-30 px-8 py-6 text-center text-xs font-normal md:text-left">
             You’re planning{" "}
             <strong className="font-bold">{months} monthly deposits</strong> to
-            reach your <span className="font-bold">${loanAmount}</span> goal by{" "}
-            <span className="font-bold">July 2023</span>. The total amount
-            loaned will be{" "}
+            reach your{" "}
+            <span className="font-bold">${formatCurrency(loanAmount)}</span>{" "}
+            goal by{" "}
+            <span className="font-bold">{calculateAndFormatDate(months)}</span>.
+            The total amount loaned will be{" "}
             <span className="font-bold">
-              ${" "}
-              {calculateTotalAmount(
-                loanAmount,
-                parseFloat(currentProduct.interest),
+              $
+              {formatCurrency(
+                calculateTotalAmount(
+                  loanAmount,
+                  parseFloat(currentProduct.interest),
+                ),
               )}
             </span>
           </div>
