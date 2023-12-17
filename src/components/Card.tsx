@@ -31,15 +31,18 @@ function Card() {
   const [months, setMonths] = useState<number>(1);
 
   useEffect(() => {
-    // console.log(products);
-
     if (products) {
       const data = filterArray(loan, products);
       setCurrentProduct(data);
-    }
-  }, [loan, products]);
 
-  if (!products) {
+      if (currentProduct) {
+        setLoanAmount(parseFloat(currentProduct?.min_amount));
+        setMonths(Number(currentProduct?.min_tenure));
+      }
+    }
+  }, [loan, products, currentProduct]);
+
+  if (!products || !currentProduct) {
     return (
       <div className="grid min-h-[500px] w-full place-content-center md:w-[550px]">
         <ProductsLoader />
@@ -54,7 +57,11 @@ function Card() {
           <button
             className="aspect-auto w-20"
             key={product.id}
-            onClick={() => setLoan(product.name)}
+            onClick={() => {
+              setLoan(product.name);
+              setLoanAmount(parseFloat(currentProduct?.min_amount));
+              setMonths(parseInt(currentProduct.min_tenure));
+            }}
           >
             <img src={product.image} alt={`${product.name} Logo`} />
           </button>
@@ -80,7 +87,9 @@ function Card() {
                 value={loanAmount}
                 onChange={(e) =>
                   setLoanAmount((prev) =>
-                    prev >= 0 ? parseInt(e.target.value) : 0,
+                    prev >= parseFloat(currentProduct?.min_amount!)
+                      ? parseFloat(e.target.value)
+                      : parseFloat(currentProduct?.min_amount!),
                   )
                 }
                 name={`${currentProduct?.name}-loan`}
@@ -108,13 +117,10 @@ function Card() {
               <input
                 className="w-full p-2 text-center focus:outline-none"
                 type="number"
-                max={12}
-                min={1}
+                max={currentProduct?.max_tenure}
+                min={currentProduct?.min_tenure}
                 value={months}
-                // onKeyDown={() =>
-                //   setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
-                // }
-                readOnly
+                // readOnly
                 onChange={(e) => setMonths(Number(e.target.value))}
                 name={`${currentProduct?.name}-months`}
                 id={`${currentProduct?.name}-months`}
