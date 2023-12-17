@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ProductsContext } from "../App";
 
 import { Loan, Product } from "../types";
@@ -21,6 +21,17 @@ function filterArray(loan: Loan, products: Product[]): Product {
   }
 }
 
+function calculateTotalAmount(loanAmount: number, interest: number): number {
+  return loanAmount + loanAmount * interest;
+}
+
+function calculateMonthlyInstallment(
+  totalAmount: number,
+  nbMonths: number,
+): number {
+  return totalAmount / nbMonths;
+}
+
 function Card() {
   const products = useContext(ProductsContext);
 
@@ -29,6 +40,16 @@ function Card() {
 
   const [loanAmount, setLoanAmount] = useState<number>(0);
   const [months, setMonths] = useState<number>(1);
+
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+
+  useEffect(() => {
+    if (currentProduct) {
+      setTotalAmount(
+        calculateTotalAmount(loanAmount, parseFloat(currentProduct.interest)),
+      );
+    }
+  }, [loanAmount, currentProduct, products]);
 
   useEffect(() => {
     if (products) {
@@ -84,18 +105,42 @@ function Card() {
               <input
                 className=" w-full p-2 focus:outline-none"
                 type="number"
+                min={parseInt(currentProduct.min_amount)}
+                max={parseInt(currentProduct.max_amount)}
                 value={loanAmount}
-                onChange={(e) =>
-                  setLoanAmount((prev) =>
-                    prev >= parseFloat(currentProduct?.min_amount!)
-                      ? parseFloat(e.target.value)
-                      : parseFloat(currentProduct?.min_amount!),
-                  )
-                }
+                onChange={(e) => {
+                  //! Validation should be either onSubmit using something like zod or yup or by displaying ann error message under the input
+                  const newLoanAmount = parseFloat(e.target.value);
+                  const max = parseFloat(currentProduct.max_amount);
+                  const min = parseFloat(currentProduct.min_amount);
+
+                  // if (newLoanAmount >= max) {
+                  //   setLoanAmount(max);
+                  //   return;
+                  // }
+
+                  // if (newLoanAmount <= min) {
+                  //   setLoanAmount(min);
+                  //   return;
+                  // }
+
+                  if (!isNaN(newLoanAmount)) {
+                    setLoanAmount(parseFloat(e.target.value));
+                  }
+                }}
                 name={`${currentProduct?.name}-loan`}
                 id={`${currentProduct?.name}-loan`}
               />
             </div>
+            {/* <p
+              className={`text-sm font-light text-red-400 ${
+                loanAmount > parseFloat(currentProduct.max_amount)
+                  ? "block"
+                  : "hidden"
+              }`}
+            >
+              you are too high
+            </p> */}
           </div>
 
           <div className="flex w-full flex-col md:w-1/3">
@@ -109,7 +154,11 @@ function Card() {
             <div className="flex w-full items-center justify-between rounded-md border-2 border-slate-200 px-1">
               <button
                 onClick={() =>
-                  setMonths((prev) => (prev > 1 ? (prev -= 1) : 1))
+                  setMonths((prev) =>
+                    prev >= parseInt(currentProduct.min_tenure)
+                      ? (prev -= 1)
+                      : parseInt(currentProduct.min_tenure),
+                  )
                 }
               >
                 <ArrowLeft size={24} />
@@ -121,14 +170,26 @@ function Card() {
                 min={currentProduct?.min_tenure}
                 value={months}
                 // readOnly
-                onChange={(e) => setMonths(Number(e.target.value))}
+                onChange={(e) => {
+                  const newMonths = Number(e.target.value);
+                  if (
+                    newMonths >= parseInt(currentProduct.min_tenure) &&
+                    newMonths <= parseInt(currentProduct.max_tenure)
+                  ) {
+                    setMonths(newMonths);
+                  }
+                }}
                 name={`${currentProduct?.name}-months`}
                 id={`${currentProduct?.name}-months`}
               />
 
               <button
                 onClick={() =>
-                  setMonths((prev) => (prev < 12 ? (prev += 1) : 12))
+                  setMonths((prev) =>
+                    prev <= parseInt(currentProduct.max_tenure)
+                      ? (prev += 1)
+                      : parseInt(currentProduct.max_tenure),
+                  )
                 }
               >
                 <ArrowRight size={24} />
@@ -142,15 +203,24 @@ function Card() {
             <h1 className="text-lg text-slate-800 md:text-xl">
               Monthly amount
             </h1>
-            <span className="text-2xl font-bold text-accent">${552}</span>
+            <span className="text-2xl font-bold text-accent">
+              ${calculateMonthlyInstallment(totalAmount, months).toPrecision(5)}
+            </span>
           </div>
 
           <div className="h-1/2 w-full bg-indigo-100 bg-opacity-30 px-8 py-6 text-center text-xs font-normal md:text-left">
-            You’re planning {months}{" "}
-            <strong className="font-bold">monthly deposits</strong> to reach
-            your <span className="font-bold">${loanAmount}</span> goal by{" "}
+            You’re planning{" "}
+            <strong className="font-bold">{months} monthly deposits</strong> to
+            reach your <span className="font-bold">${loanAmount}</span> goal by{" "}
             <span className="font-bold">July 2023</span>. The total amount
-            loaned will be <span className="font-bold">${`26, 300`}</span>
+            loaned will be{" "}
+            <span className="font-bold">
+              ${" "}
+              {calculateTotalAmount(
+                loanAmount,
+                parseFloat(currentProduct.interest),
+              )}
+            </span>
           </div>
         </div>
       </section>
