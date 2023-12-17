@@ -32,12 +32,11 @@ function calculateMonthlyInstallment(
   return totalAmount / nbMonths;
 }
 
-function calculateAndFormatDate() {
-  // const today = new Date();
+function calculateAndFormatDate(months: number) {
+  const today = new Date();
 
-  //TODO
-
-  return "21/02/2025";
+  //find the date that corresponds with the day after the months from today
+  // format that date in this format and return it: e.g "July 2023"
 }
 
 function Card() {
@@ -60,7 +59,8 @@ function Card() {
   }, [loanAmount, currentProduct, products]);
 
   useEffect(() => {
-    calculateAndFormatDate();
+    // calculateAndFormatDate(21);
+
     if (products) {
       const data = filterArray(loan, products);
       setCurrentProduct(data);
@@ -126,7 +126,7 @@ function Card() {
                 onChange={(e) => {
                   /* 
                   Validation should be either onSubmit using something
-                    like zod or yup or by displaying ann error message under the input
+                  like zod or yup or by displaying an error message under the input
                   */
 
                   const newLoanAmount = parseFloat(e.target.value);
